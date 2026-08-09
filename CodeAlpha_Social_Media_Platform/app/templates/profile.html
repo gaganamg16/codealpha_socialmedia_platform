@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="profile-page">
+
+    <!-- Profile Header -->
+    <div class="profile-card">
+
+        {% if profile.profile_picture %}
+            <img
+                src="{{ profile.profile_picture.url }}"
+                class="profile-image"
+                alt="Profile Picture"
+            >
+        {% else %}
+            <img
+                src="/media/profile_pics/default.png"
+                class="profile-image"
+                alt="Default Profile Picture"
+            >
+        {% endif %}
+
+        <h2>{{ request.user.username }}</h2>
+
+        <p class="email">{{ request.user.email }}</p>
+
+        {% if profile.bio %}
+            <p class="bio">{{ profile.bio }}</p>
+        {% else %}
+            <p class="bio">No bio added yet.</p>
+        {% endif %}
+
+        <!-- Profile Statistics -->
+        <div class="profile-stats">
+
+            <div>
+                <h3>{{ posts.count }}</h3>
+                <p>Posts</p>
+            </div>
+
+            <div>
+                <h3>{{ followers }}</h3>
+                <p>Followers</p>
+            </div>
+
+            <div>
+                <h3>{{ following }}</h3>
+                <p>Following</p>
+            </div>
+
+        </div>
+
+        <a href="{% url 'edit_profile' %}">
+            <button class="edit-profile-button">
+                ✏️ Edit Profile
+            </button>
+        </a>
+
+    </div>
+
+
+    <!-- My Posts -->
+    <div class="my-posts">
+
+        <h2>📌 My Posts</h2>
+
+        {% for post in posts %}
+
+            <div class="profile-post">
+
+                <p>{{ post.content }}</p>
+
+                {% if post.image %}
+                    <img
+                        src="{{ post.image.url }}"
+                        class="profile-post-image"
+                        alt="Post Image"
+                    >
+                {% endif %}
+
+                <small>
+                    Posted on {{ post.created_at }}
+                </small>
+
+                <div class="post-stats">
+                    ❤️ {{ post.likes.count }} Likes
+                    &nbsp;&nbsp;
+                    💬 {{ post.comments.count }} Comments
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty-posts">
+                <h3>📭 No posts yet</h3>
+                <p>Create your first post!</p>
+
+                <a href="{% url 'create_post' %}">
+                    <button>Create Post</button>
+                </a>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

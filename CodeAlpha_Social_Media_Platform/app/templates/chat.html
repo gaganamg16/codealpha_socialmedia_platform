@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="chat-page">
+
+    <!-- Chat Header -->
+    <div class="chat-header">
+
+        {% if other_user.profile.profile_picture %}
+
+            <img
+                src="{{ other_user.profile.profile_picture.url }}"
+                class="chat-avatar"
+                alt="Profile Picture"
+            >
+
+        {% else %}
+
+            <img
+                src="/media/profile_pics/default.png"
+                class="chat-avatar"
+                alt="Default Profile Picture"
+            >
+
+        {% endif %}
+
+        <div>
+            <h2>💬 {{ other_user.username }}</h2>
+            <small>{{ other_user.email }}</small>
+        </div>
+
+    </div>
+
+
+    <!-- Messages -->
+    <div class="chat-messages">
+
+        {% for msg in messages %}
+
+            {% if msg.sender == request.user %}
+
+                <div class="message-row sent">
+
+                    <div class="chat-bubble sent-bubble">
+                        {{ msg.message }}
+
+                        <small>
+                            {{ msg.created_at|date:"h:i A" }}
+                        </small>
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <div class="message-row received">
+
+                    <div class="chat-bubble received-bubble">
+                        {{ msg.message }}
+
+                        <small>
+                            {{ msg.created_at|date:"h:i A" }}
+                        </small>
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        {% empty %}
+
+            <div class="no-messages">
+                <p>👋 Start your conversation!</p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- Message Form -->
+    <form method="POST" class="chat-form">
+
+        {% csrf_token %}
+
+        <input
+            type="text"
+            name="message"
+            placeholder="Type a message..."
+            required
+            autocomplete="off"
+        >
+
+        <button type="submit">
+            Send ➤
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="create-post-page">
+
+    <div class="create-post-card">
+
+        <h1>✏️ Edit Post</h1>
+        <p>Update your post.</p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <textarea
+                name="content"
+                rows="6"
+                required
+            >{{ post.content }}</textarea>
+
+            {% if post.image %}
+                <div style="margin-top:20px;">
+                    <p><strong>Current Image:</strong></p>
+                    <img
+                        src="{{ post.image.url }}"
+                        class="feed-post-image"
+                        alt="Current Post Image"
+                    >
+                </div>
+            {% endif %}
+
+            <label class="image-label">
+                📷 Change Image
+            </label>
+
+            <input
+                type="file"
+                name="image"
+                accept="image/*"
+            >
+
+            <button type="submit">
+                💾 Save Changes
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

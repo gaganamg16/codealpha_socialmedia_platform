@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="profile-container">
+
+    <div class="profile-card">
+
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" class="profile-image">
+        {% else %}
+            <img src="/media/profile_pics/default.png" class="profile-image">
+        {% endif %}
+
+        <h2>{{ profile_user.username }}</h2>
+        {% if request.user != profile_user %}
+
+    <a href="{% url 'follow_user' profile_user.id %}">
+        {% if is_following %}
+            <button class="following-btn">
+                ✓ Following
+            </button>
+        {% else %}
+            <button class="follow-btn">
+                + Follow
+            </button>
+        {% endif %}
+    </a>
+
+{% endif %}
+
+        <p>{{ profile_user.email }}</p>
+
+        <p>{{ profile.bio }}</p>
+
+        <div class="profile-stats">
+
+            <div>
+                <h3>{{ posts.count }}</h3>
+                <p>Posts</p>
+            </div>
+
+            <div>
+                <h3>{{ followers }}</h3>
+                <p>Followers</p>
+            </div>
+
+            <div>
+                <h3>{{ following }}</h3>
+                <p>Following</p>
+            </div>
+
+        </div>
+
+        <br>
+
+        
+
+    </div>
+
+</div>
+
+<br>
+
+<h2>{{ profile_user.username }}'s Posts</h2>
+
+
+{% for post in posts %}
+
+<div class="post-card">
+
+    <h3>{{ post.user.username }}</h3>
+
+    <p>{{ post.content }}</p>
+
+    {% if post.image %}
+        <img src="{{ post.image.url }}" class="post-image">
+    {% endif %}
+
+    <br>
+
+    <small>{{ post.created_at }}</small>
+
+    <br><br>
+
+    ❤️ {{ post.likes.count }} Likes
+
+    <br>
+
+    💬 {{ post.comments.count }} Comments
+
+    <hr>
+
+    <h4>Comments</h4>
+
+    {% for comment in post.comments.all %}
+        <p>
+            <strong>{{ comment.user.username }}</strong> :
+            {{ comment.content }}
+        </p>
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+
+</div>
+
+<br>
+
+{% empty %}
+
+<p>This user hasn't posted anything yet.</p>
+
+{% endfor %}
+
+{% endblock %}

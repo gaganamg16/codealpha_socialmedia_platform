@@ -1,0 +1,246 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="feed-header">
+    <h1>🏠 Social Feed</h1>
+    <p>See what's happening in your community.</p>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'create_post' %}">
+            <button class="create-post-btn">➕ Create New Post</button>
+        </a>
+    {% endif %}
+</div>
+
+<h2 class="feed-title">Recent Posts</h2>
+
+{% if posts %}
+
+    {% for post in posts %}
+
+    <div class="social-post">
+
+        <!-- POST HEADER -->
+        <div class="post-header">
+
+            <div class="post-user">
+
+                {% if post.user.profile.profile_picture %}
+
+                    <img
+                        src="{{ post.user.profile.profile_picture.url }}"
+                        class="post-avatar"
+                        alt="Profile Picture"
+                    >
+
+                {% else %}
+
+                    <img
+                        src="/media/profile_pics/default.png"
+                        class="post-avatar"
+                        alt="Default Profile Picture"
+                    >
+
+                {% endif %}
+
+                <div>
+                    <a
+                        href="{% url 'user_profile' post.user.username %}"
+                        class="post-username"
+                    >
+                        {{ post.user.username }}
+                    </a>
+
+                    <small>
+                        {{ post.created_at|date:"d M Y, h:i A" }}
+                    </small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- POST CONTENT -->
+        {% if post.content %}
+            <div class="post-content">
+                <p>{{ post.content }}</p>
+            </div>
+        {% endif %}
+
+
+        <!-- POST IMAGE -->
+        {% if post.image %}
+            <div class="post-image-container">
+
+                <img
+                    src="{{ post.image.url }}"
+                    class="feed-post-image"
+                    alt="Post Image"
+                >
+
+            </div>
+        {% endif %}
+
+
+        <!-- FOLLOW -->
+        {% if user.is_authenticated and request.user != post.user %}
+
+            <div class="follow-section">
+
+                <a href="{% url 'follow_user' post.user.id %}">
+
+                    {% if post.user.id in following %}
+
+                        <button class="following-btn">
+                            ✓ Following
+                        </button>
+
+                    {% else %}
+
+                        <button class="follow-btn">
+                            + Follow
+                        </button>
+
+                    {% endif %}
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- LIKES COUNT -->
+        <div class="post-likes">
+            ❤️ {{ post.likes.count }} Likes
+        </div>
+
+
+        <!-- ACTIONS -->
+        {% if user.is_authenticated %}
+
+            <div class="post-actions">
+
+                <!-- LIKE BUTTON -->
+                <a href="{% url 'like_post' post.id %}">
+
+                    {% if request.user in post.likes.all %}
+
+                        <button style="background:#dc3545;color:white;">
+                            ❤️ Unlike
+                        </button>
+
+                    {% else %}
+
+                        <button>
+                            🤍 Like
+                        </button>
+
+                    {% endif %}
+
+                </a>
+
+
+                <!-- EDIT AND DELETE -->
+                {% if user == post.user %}
+
+                    <a href="{% url 'edit_post' post.id %}">
+                        <button>
+                            ✏️ Edit
+                        </button>
+                    </a>
+
+                    <a href="{% url 'delete_post' post.id %}">
+                        <button class="delete-btn">
+                            🗑️ Delete
+                        </button>
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- COMMENTS -->
+        <div class="comments-section">
+
+            <h4>💬 Comments</h4>
+
+            {% for comment in post.comments.all %}
+
+                <div class="comment">
+
+                    <strong>
+                        👤 {{ comment.user.username }}
+                    </strong>
+
+                    <p>
+                        {{ comment.content }}
+                    </p>
+
+                    <small>
+                        {{ comment.created_at }}
+                    </small>
+
+                </div>
+
+            {% empty %}
+
+                <p>No comments yet.</p>
+
+            {% endfor %}
+
+
+            <!-- COMMENT FORM -->
+            {% if user.is_authenticated %}
+
+                <form
+                    method="POST"
+                    action="{% url 'add_comment' post.id %}"
+                    class="comment-form"
+                >
+
+                    {% csrf_token %}
+
+                    <input
+                        type="text"
+                        name="content"
+                        placeholder="Write a comment..."
+                        required
+                    >
+
+                    <button type="submit">
+                        Comment
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <div class="empty-feed">
+
+        <h2>📭 No posts yet</h2>
+
+        <p>Be the first person to create a post!</p>
+
+        <a href="{% url 'create_post' %}">
+            <button>Create Post</button>
+        </a>
+
+    </div>
+
+{% endif %}
+
+{% endblock %}

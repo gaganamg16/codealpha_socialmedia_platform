@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="search-page">
+
+    <div class="search-header">
+        <h1>🔍 Search Users</h1>
+        <p>Find people and connect with them.</p>
+    </div>
+
+    <form method="GET" class="search-form">
+
+        <input
+            type="text"
+            name="q"
+            placeholder="Search username..."
+            value="{{ query|default:'' }}"
+            required
+        >
+
+        <button type="submit">
+            🔍 Search
+        </button>
+
+    </form>
+
+
+    {% if query %}
+
+        <h2 class="search-results-title">
+            Results for "{{ query }}"
+        </h2>
+
+    {% endif %}
+
+
+    {% if users %}
+
+        <div class="search-results">
+
+            {% for user in users %}
+
+                <div class="search-user-card">
+
+                    {% if user.profile.profile_picture %}
+
+                        <img
+                            src="{{ user.profile.profile_picture.url }}"
+                            class="search-avatar"
+                            alt="Profile Picture"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="/media/profile_pics/default.png"
+                            class="search-avatar"
+                            alt="Default Profile Picture"
+                        >
+
+                    {% endif %}
+
+
+                    <div class="search-user-info">
+
+                        <a href="{% url 'user_profile' user.username %}">
+                            <h3>{{ user.username }}</h3>
+                        </a>
+
+                        <p>{{ user.email }}</p>
+
+                    </div>
+
+
+                    {% if request.user != user %}
+
+                        <a href="{% url 'follow_user' user.id %}">
+
+                            <button class="search-follow-btn">
+                                Follow / Unfollow
+                            </button>
+
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% elif query %}
+
+        <div class="no-search-results">
+
+            <h2>😕 No users found</h2>
+
+            <p>Try searching for a different username.</p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

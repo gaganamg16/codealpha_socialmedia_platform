@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="notifications-page">
+
+    <div class="notifications-header">
+        <h1>🔔 Notifications</h1>
+        <p>Stay updated with your activity.</p>
+    </div>
+
+    {% if notifications %}
+
+        <div class="notifications-list">
+
+            {% for notification in notifications %}
+
+                <div class="notification-card">
+
+                    <div class="notification-icon">
+                        🔔
+                    </div>
+
+                    <div class="notification-content">
+                        <p>{{ notification.message }}</p>
+
+                        <small>
+                            {{ notification.created_at|date:"d M Y, h:i A" }}
+                        </small>
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-notifications">
+
+            <h2>🔕 No notifications</h2>
+
+            <p>You don't have any notifications yet.</p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

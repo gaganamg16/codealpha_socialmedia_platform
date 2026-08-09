@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="create-post-page">
+
+    <div class="create-post-card">
+
+        <h1>➕ Create a Post</h1>
+        <p>Share something with your community.</p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <textarea
+                name="content"
+                placeholder="What's on your mind?"
+                rows="6"
+                required
+            ></textarea>
+
+            <label class="image-label">
+                📷 Add an image
+            </label>
+
+            <input
+                type="file"
+                name="image"
+                accept="image/*"
+            >
+
+            <button type="submit">
+                🚀 Publish Post
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

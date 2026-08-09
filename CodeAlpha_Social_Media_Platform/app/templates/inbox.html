@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="inbox-page">
+
+    <div class="inbox-header">
+        <h1>💬 Messages</h1>
+        <p>Choose a user to start a conversation.</p>
+    </div>
+
+    {% if users %}
+
+        <div class="users-list">
+
+            {% for user in users %}
+
+                <div class="user-chat-card">
+
+                    {% if user.profile.profile_picture %}
+
+                        <img
+                            src="{{ user.profile.profile_picture.url }}"
+                            class="inbox-avatar"
+                            alt="Profile Picture"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="/media/profile_pics/default.png"
+                            class="inbox-avatar"
+                            alt="Default Profile Picture"
+                        >
+
+                    {% endif %}
+
+                    <div class="user-chat-info">
+
+                        <h3>{{ user.username }}</h3>
+
+                        <p>{{ user.email }}</p>
+
+                    </div>
+
+                    <a href="{% url 'chat' user.username %}">
+                        <button class="chat-button">
+                            💬 Chat
+                        </button>
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-inbox">
+
+            <h2>📭 No users found</h2>
+
+            <p>There are no other users to chat with yet.</p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
