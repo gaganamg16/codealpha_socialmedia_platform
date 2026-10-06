@@ -2,7 +2,7 @@
 
 
 
-This repository contains projects completed as part of the \*\*CodeAlpha Internship\*\*.
+This repository contains projects completed as part of the \*\*CodeAlpha Internship\*\*..
 
 
 
